@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <title>Map Screenshot Service</title>
+  <link rel="icon" href="favicon.ico" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin=""
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+    crossorigin=""
+  ></script>
+  <style>
+    html,
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    #mapEl {
+      height: 100vh;
+      width: 100vw;
+    }
+  </style>
+</head>
+<body>
+  <div id="mapEl" />
+  <script type="text/javascript">
+    const query = getQueryParams();
+    window.query = query;
+
+    const defaults = {
+      tileLayer:
+        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      center: [51.505, -0.09],
+      zoom: 13,
+      attributionControl: false,
+      zoomControl: false,
+      markCenter: true,
+    };
+
+    const center = query.center || defaults.center,
+      zoom = query.zoom || defaults.zoom,
+      tileLayer = query.tileLayer || defaults.tileLayer,
+      attribution = query.attribution || defaults.attribution,
+      zoomControl = query.zoomControl || defaults.zoomControl,
+      attributionControl =
+        query.attributionControl || defaults.attributionControl,
+      markCenter = query.markCenter || defaults.markCenter,
+      marker = query.marker || (markCenter && center);
+
+    const initOpts = {
+      center,
+      zoom,
+      attributionControl,
+      zoomControl,
+    };
+
+    const map = L.map("mapEl", initOpts);
+    L.tileLayer(tileLayer, { attribution }).addTo(map);
+
+    const mapReadyEvent = new Event("mapReady");
+    document.addEventListener("mapReady", (e) =>
+      console.log("mapReady", e, "query", window.query, marker),
+    );
+    document.dispatchEvent(mapReadyEvent);
+    if (marker) {
+      L.marker(marker).addTo(map);
+    }
+
+    function jsonParseSafe(str) {
+      try {
+        return JSON.parse(str);
+      } catch {
+        return str;
+      }
+    }
+    function getQueryParams() {
+      const query = new URLSearchParams(window.location.search);
+      const obj = {};
+      for (const [key, value] of query.entries()) {
+        obj[key] = jsonParseSafe(value);
+      }
+      const format = {
+        object: obj,
+        array: Array.from(query.entries()),
+        iterable: query.entries(),
+      };
+      return format.object;
+    }
+  </script>
+</body>
