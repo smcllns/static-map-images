@@ -19,6 +19,9 @@ if (admin.apps.length === 0) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://maps-d5e67.firebaseio.com/",
+    databaseAuthVariableOverride: {
+      uid: process.env.FIREBASE_AUTH_UID,
+    },
   });
 }
 
