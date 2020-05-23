@@ -10,15 +10,14 @@ const serviceAccount = {
   auth_uri: "https://accounts.google.com/o/oauth2/auth",
   token_uri: "https://oauth2.googleapis.com/token",
   auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-  client_x509_cert_url:
-    "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-crru9%40maps-d5e67.iam.gserviceaccount.com",
+  client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL,
 };
 
 // Initialize the app with a service account, granting admin privileges
 if (admin.apps.length === 0) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://maps-d5e67.firebaseio.com/",
+    databaseURL: process.env.FIREBASE_DATABASE_URL,
     databaseAuthVariableOverride: {
       uid: process.env.FIREBASE_AUTH_UID,
     },

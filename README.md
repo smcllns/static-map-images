@@ -9,7 +9,7 @@ Goal: API endpoint to get static images of maps.
 
 ### Trying another approach:
 
-1. Render the map in a browser, setting map properties through url parameters (`index.html`)
+1. Render the map in a browser, setting map properties through url parameters (`public/index.html`)
 2. Launch with Puppeteer and return a screenshot (`api/screenshot.js`)
 
 Note: this is using browserless.io which is paid but is quicker to run puppeteer (can make that cheaper later), and I can permanently cache the images unlike Mapbox.
@@ -21,6 +21,7 @@ Note: this is using browserless.io which is paid but is quicker to run puppeteer
 ```
 BROWSERLESSTOKEN=xxx
 PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+(see _db.js for Firebase env vars required)
 ```
 
 2. `npm run i`
